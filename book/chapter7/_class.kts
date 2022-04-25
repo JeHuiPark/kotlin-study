@@ -1,5 +1,3 @@
-import java.lang.IllegalArgumentException
-
 // 아래와 같이 클래스의 이름 앞에 class 의 키워드만 적어도 클래스 정의가 가능하다
 //class Car // OK
 
@@ -135,3 +133,106 @@ fun receiveSSN(ssn: SSN) {
     println("Received $ssn")
 }
 receiveSSN(SSN("111-11-1111"))
+
+/**
+ * 컴패니언 객체
+ *
+ * 캠피니언 객체는 클래스 안에 정의한 싱글톤이다
+ * 인터페이스 구현이 가능
+ * 다른 클래스 확징이 가능
+ */
+
+// 클래스 레벨의 속성과 메소드가 필요할 경우 컴패니언 객체를 이용하여 구현할 수 있다
+class MachineOperator(val name: String) {
+
+    fun checkin() = checkedIn++
+    fun checkout() = checkedIn--
+
+    companion object {
+        // 클래스 레벨 속성
+        var checkedIn = 0
+
+        // 클래스 레벨 메소드
+        fun minimumBreak() = "15 minutes every 2 hours"
+    }
+}
+
+MachineOperator("Master").checkin()
+println(MachineOperator.minimumBreak())
+println(MachineOperator.checkedIn)
+
+// 인스턴스 참조에선 companion 객체에 접근할 수 없다
+//MachinOperator("Master").minimumBreak() // error: unresolved reference: minimumBreak
+
+// 컴패니언 객체 접근
+println(MachineOperator.Companion::class)
+
+class CompanionNamingExample {
+
+    companion object CompanionObjectName
+}
+
+println(CompanionNamingExample.CompanionObjectName::class)
+
+class MachineOperator2 private constructor(val name: String) {
+
+    companion object Factory {
+
+        fun create(name: String): MachineOperator2 {
+            val instance = MachineOperator2(name)
+            // ...
+            return instance
+        }
+    }
+}
+
+// 클래스 이름을 이용해서 컴패니언 객체에 접근하는 것을 보면 create 메서드가 static 멤버로 보일 수도 있지만, static 메소드는 아니다
+// 컴패니언 객체의 멤버에 접근하면 코틀린 컴파일러는 싱글톤 객체로 라우팅을 한다
+// 이러한 점은 Java 와의 상호 운용성 측면에서 문제가 될 수 있기 때문에 static 메서드를 기대하는 경우에는 약속된 annotation 을 이용하면 된다 (17 챕터)
+var machineOperator2 = MachineOperator2.create("machine")
+
+/**
+ * 데이터 클래스
+ *
+ * 행동, 동작보다는 데이터를 옮기는 데 특화된 클래스
+ * 주 생성자를 이용하여 최소 한 개 이상의 속성을 정의해야 함
+ * val, var 가 아닌 파라미터는 사용할 수 없다
+ * 클래스 바디에 속성이나 메소드 추가 가능
+ * equals(), hashcode(), toString() 메소드를 코틀린이 만들어줌
+ * 셀렉트 속성의 업데이트된 값을 제공하면서 인스턴스를 복사해 주는 copy() 메소드 제공 (쉘로우 카피)
+ * 주 생성자에 의해 정의된 속성에 접근할 수 있게 해주는 componentN() 메소드 제공 (componentN 메소드의 주된 목적은 구조분해)
+ *     -> 속성정의 순서대로 1부터 순차적으로 증가하는 정수를 메소드 접미사로 추가 함
+ *         -> component1(), component2(), component3() ...
+ */
+
+data class Task(val id: Int, val name: String, val completed: Boolean, val assigned: Boolean)
+val task1 = Task(1, "name", false, true)
+println(task1) // Task(id=1, name=name, completed=false, assigned=true)
+
+// copy
+var task1Completed = task1.copy(completed = true, assigned = false)
+println(task1Completed) // Task(id=1, name=name, completed=true, assigned=false)
+
+// 구조분해 (destructuring)
+// task1 의 id 값을 획득하기 위해 component1() 메소드를 실행한다
+// task1 의 assigned 값을 획득하기 위해 component4() 메소드를 실행한다
+// -> 속성의 순서를 기반으로 데이터를 추출하기 때문에 주의할 필요가 있다
+val (id, _, _, isAssigned) = task1
+println("Id: $id Assigned: $isAssigned") // Id: 1 Assigned: true
+
+data class DataClassOverrideEx(val id: String, val name: String) {
+
+    override fun equals(other: Any?): Boolean {
+        return when {
+            !(other is DataClassOverrideEx) -> false
+            id == other.id -> true
+            else -> false
+        }
+    }
+
+    override fun hashCode(): Int {
+        return id.hashCode()
+    }
+}
+val aDataClassOverrideEx = DataClassOverrideEx("id", "before-name")
+println(aDataClassOverrideEx == aDataClassOverrideEx.copy(name = "after-name")) // true
