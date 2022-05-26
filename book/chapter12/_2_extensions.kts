@@ -44,5 +44,44 @@ fun String.isPalindrome(): Boolean = reversed() == this
 println("aba".isPalindrome()) // true
 
 /**
- * TODO static 메소드 인젝팅
+ * static 메소드 인젝팅
  */
+
+// 클래스의 컴패니언 객체를 확장해서 static 메소드를 인젝팅할 수 있다.
+fun String.Companion.toURL(link: String) = java.net.URL(link)
+// 코틀린은 String 에 확장되고 추가된 컴패니언이 있다.
+
+String.toURL("https://github.com")
+
+class Ex
+//fun Ex.Companion.ex(): Unit = println("error") // error: unresolved reference: Companion
+
+class Ex2 {
+    companion object Named
+}
+fun Ex2.Named.ex() = println("extension")
+Ex2.ex()
+
+/**
+ * 클래스 내부에서 인젝팅
+ */
+
+// 클래스 내부에서 확장한 코드는 scope 이 클래스 안으로 제한된다 (visiblity 제한)
+
+class Point2(x: Int, y: Int) {
+    private val pair = Pair(x, y)
+    private val firstsign = if (pair.first < 0) "" else "+"
+    private val secondsign = if (pair.second < 0) "" else "+"
+    override fun toString() = pair.point2String()
+    fun Pair<Int, Int>.point2String() = "(${firstsign}${first}, ${this@Point2.secondsign}${this.second})"
+    // 클래스 내부에서 정의한 확장 함수의 바디에서 접근할 수 있는 context 는 2개이다 => 함수 내부에 2개의 리시버가 추가됨
+    // 함수의 caller 가 가장 우선순위가 높은 context 라고 표현해도 좋을 것 같다 (this 참조의 기본이기 때문에) -> extension receiver 라고 부름
+    // 또 다른 context 는 Point2 의 객체 context 이다 -> dispatch receiver 라고 부름
+    // point2 의 객체 context 에 접근하기 위해선 this@Point2 <- 이런식의 명시적 표현이 필요하다 (Chapter8 에서 학습한 문법과 동일)
+    // 확장함수에서 메소드를 찾는 순서 = extension receiver 탐색 -> dispatch receiver 탐색
+    //     프로퍼티 또한 동일
+}
+
+val point22 = Point2(1, -1)
+println(point22(1, -1))
+//2 to 2.point2String() // error: unresolved reference: point2String
