@@ -85,3 +85,13 @@ class Point2(x: Int, y: Int) {
 val point22 = Point2(1, -1)
 println(point22) // (+1, -1)
 //2 to 2.point2String() // error: unresolved reference: point2String
+
+fun <T, R, U> ((T) -> R).andThen(next: (R) -> U): ((T) -> U) = { next(this(it)) }
+fun inc(number: Int) = number + 1
+fun dec(number: Int) = number - 1
+
+val incAndDecAndDecAndDec = ::inc
+    .andThen(::dec)
+    .andThen(::dec)
+    .andThen(::dec)
+incAndDecAndDecAndDec(10) // 8
