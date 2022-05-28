@@ -83,5 +83,5 @@ class Point2(x: Int, y: Int) {
 }
 
 val point22 = Point2(1, -1)
-println(point22(1, -1))
+println(point22) // (+1, -1)
 //2 to 2.point2String() // error: unresolved reference: point2String
