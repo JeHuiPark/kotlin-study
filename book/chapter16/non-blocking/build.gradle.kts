@@ -9,4 +9,7 @@ repositories {
 
 dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.2")
+    // https://mvnrepository.com/artifact/com.beust/klaxon
+    implementation("com.beust:klaxon:5.6")
+
 }
