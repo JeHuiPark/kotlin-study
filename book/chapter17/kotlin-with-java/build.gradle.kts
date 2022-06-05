@@ -7,5 +7,11 @@ repositories {
     mavenCentral()
 }
 
+kotlin {
+    jvmToolchain {
+        (this as JavaToolchainSpec).languageVersion.set(JavaLanguageVersion.of(11))
+    }
+}
+
 dependencies {
 }
