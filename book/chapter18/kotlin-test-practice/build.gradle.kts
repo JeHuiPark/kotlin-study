@@ -32,7 +32,7 @@ tasks {
 }
 
 jacoco {
-    toolVersion = "0.8.3"
+    toolVersion = "0.8.7"
 }
 
 application {
