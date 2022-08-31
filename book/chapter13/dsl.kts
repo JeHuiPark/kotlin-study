@@ -1,9 +1,15 @@
+import java.net.URLEncoder
+import java.nio.charset.Charset
+import java.security.URIParameter
+
 "https://api.sampleapis.com/codingresources/codingResources/{id}" get {
     path name "id" value "1"
     query name "q" value "v1"
     query name "q" value "v2"
 
     execute {
+        // error: 'val query: Dsl.QueryBuilder' can't be called in this context by implicit receiver. Use the explicit one if necessary
+        // query name "1" value "3"
         println("status = ${this.status}, content = ${this.content}") //status = 200, content = OK
     }
 }
@@ -67,12 +73,13 @@ class QueryBuilder {
     fun build(): String {
         val sb = StringBuilder("?")
         for (query in queryMap) {
-            sb.append("${query.key}=${query.value.joinToString()}&")
+            sb.append("${query.key}=${URLEncoder.encode(query.value.joinToString(separator = ","), Charset.defaultCharset())}&")
         }
         return sb.toString()
     }
 }
 
+@XDslMarker
 class Result(val status: Int, val content: String)
 
 @XDslMarker
