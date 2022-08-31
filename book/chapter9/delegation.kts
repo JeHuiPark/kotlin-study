@@ -150,13 +150,14 @@ fun getTemperature(): Int {
 // 지연 델리게이션 lazy deleagtaion
 fun lazyEvalEx(bool: Boolean) {
     val temperature by lazy { getTemperature() }
+    println("lazy init")
     if (bool && temperature == 1) {
         println("something")
     }
     println("finally")
 }
-lazyEvalEx(false) // finally
-lazyEvalEx(true) // fetch temperature ... something ... finally
+lazyEvalEx(false) // lazy init ... finally
+lazyEvalEx(true) // lazy init ... fetch temperature ... something ... finally
 
 // 옵저버블 델리게이션 observable delegation
 var count by observable(0) { prop, old, new ->
