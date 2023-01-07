@@ -15,6 +15,7 @@ class ExampleMain : FreeSpec({
         // 인터페이스 객체를 생성하기 위해 패키지 경로에서 참조 가능한 구현체를 찾는다
         // see: com.appmattus.kotlinfixture.resolver.AbstractClassResolver
         obj.a shouldBe  "fixed string"
+        obj.b.value shouldBe "fixed string"
     }
 
     "concrete class" {
