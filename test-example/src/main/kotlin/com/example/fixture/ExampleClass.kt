@@ -1,4 +1,4 @@
-package com.example
+package com.example.fixture
 
 class ExampleClass(
     val a: String,

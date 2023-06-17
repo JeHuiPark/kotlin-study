@@ -1,4 +1,4 @@
-package com.example
+package com.example.fixture
 
 import com.appmattus.kotlinfixture.config.range
 import com.appmattus.kotlinfixture.decorator.nullability.AlwaysNullStrategy
