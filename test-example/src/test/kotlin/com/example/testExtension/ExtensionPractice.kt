@@ -1,4 +1,4 @@
-package com.example
+package com.example.testExtension
 
 import io.kotest.core.annotation.AutoScan
 import io.kotest.core.listeners.AfterContainerListener
@@ -18,7 +18,6 @@ import io.kotest.core.listeners.PrepareSpecListener
 import io.kotest.core.spec.Spec
 import io.kotest.core.test.TestCase
 import io.kotest.core.test.TestResult
-import io.kotest.runner.junit.platform.toTestExecutionResult
 import kotlin.reflect.KClass
 
 @AutoScan

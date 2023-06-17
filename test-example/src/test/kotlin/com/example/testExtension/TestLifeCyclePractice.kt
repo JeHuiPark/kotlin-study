@@ -1,6 +1,6 @@
-package com.example
+package com.example.testExtension
 
-import com.example.TestLifeCyclePractice.Fixture.printTestScope
+import com.example.testExtension.TestLifeCyclePractice.Fixture.printTestScope
 import io.kotest.core.spec.style.FreeSpec
 import io.kotest.core.test.TestScope
 
